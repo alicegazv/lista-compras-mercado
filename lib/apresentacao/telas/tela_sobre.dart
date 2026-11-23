@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../config/identidade.dart';
+import '../componentes/mascote.dart';
 import '../providers.dart';
 
 class TelaSobre extends ConsumerWidget {
@@ -23,6 +24,8 @@ class TelaSobre extends ConsumerWidget {
             child: ListView(
               padding: const EdgeInsets.all(16),
               children: [
+                const Center(child: Mascote(tamanho: 110)),
+                const SizedBox(height: 8),
                 Text(Identidade.nomeDoApp, style: textos.headlineSmall),
                 const SizedBox(height: 8),
                 Text(Identidade.descricao, style: textos.bodyLarge),

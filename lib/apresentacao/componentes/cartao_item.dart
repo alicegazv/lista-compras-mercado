@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../config/identidade.dart';
 import '../../dominio/item.dart';
 import '../providers.dart';
 
@@ -23,7 +24,7 @@ class CartaoItem extends ConsumerWidget {
         padding: const EdgeInsets.only(right: 24),
         decoration: BoxDecoration(
           color: cores.errorContainer,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(20),
         ),
         child: Icon(Icons.delete_outline, color: cores.onErrorContainer),
       ),
@@ -33,6 +34,7 @@ class CartaoItem extends ConsumerWidget {
         child: ListTile(
           onTap: () => context.go('/item/${item.id}'),
           leading: Checkbox(
+            shape: const CircleBorder(),
             value: item.comprado,
             onChanged: (_) => notifier.alternarComprado(item),
           ),
@@ -45,7 +47,8 @@ class CartaoItem extends ConsumerWidget {
                 : null,
           ),
           subtitle: Text(
-            '${item.categoria} · ${item.quantidade} un.',
+            '${Identidade.emojiDa(item.categoria)} ${item.categoria} · '
+            '${item.quantidade} un.',
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),

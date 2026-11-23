@@ -28,7 +28,7 @@ abstract final class Identidade {
   ];
 
   /// Cor semente do tema (Aula 10): o Material 3 deriva a paleta a partir dela.
-  static const corSemente = Color(0xFF1B7F5A); // verde de feira
+  static const corSemente = Color(0xFFF06292); // rosa
 
   /// Categorias oferecidas no formulário. A primeira é o valor padrão.
   static const categorias = [
@@ -40,4 +40,17 @@ abstract final class Identidade {
     'Limpeza',
     'Higiene',
   ];
+
+  /// Emoji exibido ao lado de cada categoria.
+  static const emojis = {
+    'Hortifrúti': '🥕',
+    'Açougue': '🥩',
+    'Padaria': '🥐',
+    'Mercearia': '🍚',
+    'Bebidas': '🧃',
+    'Limpeza': '🧼',
+    'Higiene': '🧴',
+  };
+
+  static String emojiDa(String categoria) => emojis[categoria] ?? '🛒';
 }

@@ -198,7 +198,9 @@ class _FormularioItemState extends ConsumerState<FormularioItem> {
                         for (final categoria in categorias)
                           DropdownMenuItem(
                             value: categoria,
-                            child: Text(categoria),
+                            child: Text(
+                              '${Identidade.emojiDa(categoria)} $categoria',
+                            ),
                           ),
                       ],
                       onChanged: (valor) {

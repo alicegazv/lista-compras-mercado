@@ -7,6 +7,7 @@ import '../../dominio/item.dart';
 import '../../dominio/regras_item.dart';
 import '../componentes/cartao_item.dart';
 import '../componentes/faixa_offline.dart';
+import '../componentes/mascote.dart';
 import '../providers.dart';
 
 class TelaLista extends ConsumerWidget {
@@ -146,25 +147,47 @@ class _CabecalhoResumo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textos = Theme.of(context).textTheme;
+    final cores = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '${resumo.comprados} de ${resumo.total} itens comprados',
-            style: textos.titleMedium,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [cores.primaryContainer, cores.tertiaryContainer],
           ),
-          const SizedBox(height: 8),
-          LinearProgressIndicator(value: resumo.progresso),
-          if (resumo.aguardandoEnvio > 0) ...[
-            const SizedBox(height: 8),
+          borderRadius: BorderRadius.circular(24),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
             Text(
-              '${resumo.aguardandoEnvio} alteração(ões) aguardando envio',
-              style: textos.bodySmall,
+              '♡ ${resumo.comprados} de ${resumo.total} itens comprados',
+              style: textos.titleMedium?.copyWith(
+                color: cores.onPrimaryContainer,
+                fontWeight: FontWeight.bold,
+              ),
             ),
+            const SizedBox(height: 10),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: LinearProgressIndicator(
+                value: resumo.progresso,
+                minHeight: 10,
+                backgroundColor: cores.surface.withValues(alpha: 0.6),
+              ),
+            ),
+            if (resumo.aguardandoEnvio > 0) ...[
+              const SizedBox(height: 8),
+              Text(
+                '${resumo.aguardandoEnvio} alteração(ões) aguardando envio',
+                style: textos.bodySmall?.copyWith(
+                  color: cores.onPrimaryContainer,
+                ),
+              ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
@@ -182,16 +205,18 @@ class _EstadoVazio extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.shopping_basket_outlined,
-              size: 64,
-              color: tema.colorScheme.outline,
-            ),
+            const Mascote(),
             const SizedBox(height: 16),
-            Text('A lista está vazia.', style: tema.textTheme.titleMedium),
+            Text(
+              'A lista está vazia.',
+              style: tema.textTheme.titleLarge?.copyWith(
+                color: tema.colorScheme.primary,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 8),
             const Text(
-              'Toque em "Novo item" para começar.',
+              'Toque em "Novo item" para começar ✿',
               textAlign: TextAlign.center,
             ),
           ],
