@@ -1,0 +1,72 @@
+# Gera o APK automaticamente no GitHub, sem precisar instalar Flutter no computador.
+# A cada envio (push) para a branch main: instala o Flutter, completa os arquivos
+# padrão do Android, roda a análise e os testes, gera o APK e publica uma Release.
+name: Gerar APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v4
+
+      - name: Instalar Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Instalar Flutter (stable)
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Instalar SQLite (usado nos testes do repositório)
+        run: sudo apt-get update && sudo apt-get install -y libsqlite3-dev
+
+      - name: Completar os arquivos padrão do Android (ícones, Gradle, temas)
+        # Não sobrescreve arquivos já existentes (manifesto, MainActivity, lib/, test/).
+        run: |
+          flutter create --org br.com.listamercado --project-name compras --platforms android .
+          rm -f test/widget_test.dart
+
+      - name: Baixar dependências
+        run: flutter pub get
+
+      - name: Análise estática
+        run: flutter analyze --no-fatal-infos
+
+      - name: Testes automatizados
+        run: flutter test
+
+      - name: Gerar o APK
+        run: |
+          flutter build apk --release
+          mkdir -p saida
+          cp build/app/outputs/flutter-apk/app-release.apk saida/compras-listamercado-v1.0.${{ github.run_number }}.apk
+
+      - name: Guardar o APK como artefato
+        uses: actions/upload-artifact@v4
+        with:
+          name: apk
+          path: saida/*.apk
+
+      - name: Publicar Release com o APK
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          name: Lista de Compras do Mercado v1.0.${{ github.run_number }}
+          body: |
+            APK gerado automaticamente a partir do commit ${{ github.sha }}.
+            Para instalar: baixe o arquivo .apk abaixo no celular Android e abra-o
+            (permita "Instalar apps desconhecidos" quando o Android pedir).
+          files: saida/*.apk

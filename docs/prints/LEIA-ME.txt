@@ -1,0 +1,2 @@
+Coloque aqui os prints do app com estes nomes:
+01-lista.png, 02-novo-item.png, 03-editar.png, 04-offline.png, 05-sobre.png, 06-descartar.png
